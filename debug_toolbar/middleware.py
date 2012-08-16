@@ -60,8 +60,12 @@ class DebugToolbarMiddleware(object):
                 self.tag = u'</' + tag + u'>'
 
     def _show_toolbar(self, request):
-        if getattr(settings, 'TEST', False):
-            return False
+        try:
+            test = bool(getattr(settings, 'TEST'))
+            if test == False:
+                return False
+        except AttributeError:
+            pass
 
         x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR', None)
         if x_forwarded_for:
